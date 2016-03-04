@@ -13,6 +13,7 @@
 		7795D75C1C89EF9A008AB2A2 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7795D75A1C89EF9A008AB2A2 /* LaunchScreen.storyboard */; };
 		7795D7641C89F316008AB2A2 /* TableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7795D7631C89F316008AB2A2 /* TableViewController.swift */; };
 		7795D7661C89F4A5008AB2A2 /* ToDoItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7795D7651C89F4A5008AB2A2 /* ToDoItem.swift */; };
+		7795D7681C89F99A008AB2A2 /* TableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7795D7671C89F99A008AB2A2 /* TableViewCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -24,6 +25,7 @@
 		7795D75D1C89EF9A008AB2A2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		7795D7631C89F316008AB2A2 /* TableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TableViewController.swift; sourceTree = "<group>"; };
 		7795D7651C89F4A5008AB2A2 /* ToDoItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ToDoItem.swift; sourceTree = "<group>"; };
+		7795D7671C89F99A008AB2A2 /* TableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TableViewCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -58,6 +60,7 @@
 			children = (
 				7795D7511C89EF9A008AB2A2 /* AppDelegate.swift */,
 				7795D7631C89F316008AB2A2 /* TableViewController.swift */,
+				7795D7671C89F99A008AB2A2 /* TableViewCell.swift */,
 				7795D7651C89F4A5008AB2A2 /* ToDoItem.swift */,
 				7795D7551C89EF9A008AB2A2 /* Main.storyboard */,
 				7795D7581C89EF9A008AB2A2 /* Assets.xcassets */,
@@ -139,6 +142,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				7795D7521C89EF9A008AB2A2 /* AppDelegate.swift in Sources */,
+				7795D7681C89F99A008AB2A2 /* TableViewCell.swift in Sources */,
 				7795D7641C89F316008AB2A2 /* TableViewController.swift in Sources */,
 				7795D7661C89F4A5008AB2A2 /* ToDoItem.swift in Sources */,
 			);

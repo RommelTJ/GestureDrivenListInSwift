@@ -15,6 +15,7 @@ class TableViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        //Hardcode some items to our list.
         if toDoItems.count == 0 {
             toDoItems.append(ToDoItem(text: "Write an app"))
             toDoItems.append(ToDoItem(text: "Eat dinner"))
@@ -26,6 +27,9 @@ class TableViewController: UITableViewController {
             toDoItems.append(ToDoItem(text: "Learn Korean"))
         }
         
+        //Styling for the cells.
+        self.tableView.separatorStyle = .None
+        self.tableView.rowHeight = 50.0
         
     }
 
@@ -41,13 +45,26 @@ class TableViewController: UITableViewController {
     }
 
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier("cell", forIndexPath: indexPath)
+        let cell = tableView.dequeueReusableCellWithIdentifier("cell", forIndexPath: indexPath) as! TableViewCell
 
         //Configure the cell.
         let item = toDoItems[indexPath.row]
         cell.textLabel?.text = item.text
+        cell.textLabel?.backgroundColor = UIColor.clearColor() //Setting background to clear so we can see gradient.
 
         return cell
+    }
+    
+    //MARK: Table View Delegate
+    func colorForIndex(index: Int) -> UIColor {
+        //Helper method for returning a red color that is progressively greener based on its index.
+        let itemCount = toDoItems.count - 1
+        let val = (CGFloat(index) / CGFloat(itemCount)) * 0.6
+        return UIColor(red: 1.0, green: val, blue: 0.0, alpha: 1.0)
+    }
+    
+    override func tableView(tableView: UITableView, willDisplayCell cell: UITableViewCell, forRowAtIndexPath indexPath: NSIndexPath) {
+        cell.backgroundColor = colorForIndex(indexPath.row)
     }
 
 }
