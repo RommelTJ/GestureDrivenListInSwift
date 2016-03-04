@@ -29,6 +29,7 @@ class TableViewController: UITableViewController {
         
         //Styling for the cells.
         self.tableView.separatorStyle = .None
+        self.tableView.backgroundColor = UIColor.blackColor()
         self.tableView.rowHeight = 50.0
         
     }
@@ -51,6 +52,9 @@ class TableViewController: UITableViewController {
         let item = toDoItems[indexPath.row]
         cell.textLabel?.text = item.text
         cell.textLabel?.backgroundColor = UIColor.clearColor() //Setting background to clear so we can see gradient.
+        cell.selectionStyle = .None
+        cell.delegate = self
+        cell.toDoItem = item
 
         return cell
     }
@@ -67,4 +71,19 @@ class TableViewController: UITableViewController {
         cell.backgroundColor = colorForIndex(indexPath.row)
     }
 
+}
+
+extension TableViewController: TableViewCellDelegate {
+
+    func toDoItemDeleted(toDoItem: ToDoItem) {
+        let index = toDoItems.indexOf(toDoItem)
+        if index != nil {
+            //Found the item in the array, so remove it.
+            toDoItems.removeAtIndex(index!)
+            self.tableView.beginUpdates()
+            let indexPathForRow = NSIndexPath(forRow: index!, inSection: 0)
+            self.tableView.deleteRowsAtIndexPaths([indexPathForRow], withRowAnimation: UITableViewRowAnimation.Fade)
+            self.tableView.endUpdates()
+        }
+    }
 }
