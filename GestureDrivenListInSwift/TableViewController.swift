@@ -50,8 +50,8 @@ class TableViewController: UITableViewController {
 
         //Configure the cell.
         let item = toDoItems[indexPath.row]
-        cell.textLabel?.text = item.text
-        cell.textLabel?.backgroundColor = UIColor.clearColor() //Setting background to clear so we can see gradient.
+        //cell.textLabel?.text = item.text
+        //cell.textLabel?.backgroundColor = UIColor.clearColor() //Setting background to clear so we can see gradient.
         cell.selectionStyle = .None
         cell.delegate = self
         cell.toDoItem = item
@@ -73,6 +73,7 @@ class TableViewController: UITableViewController {
 
 }
 
+//MARK: Table View Cell Delegate
 extension TableViewController: TableViewCellDelegate {
 
     func toDoItemDeleted(toDoItem: ToDoItem) {
@@ -86,4 +87,5 @@ extension TableViewController: TableViewCellDelegate {
             self.tableView.endUpdates()
         }
     }
+
 }
