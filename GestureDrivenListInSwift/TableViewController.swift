@@ -112,5 +112,30 @@ extension TableViewController: TableViewCellDelegate {
             self.tableView.endUpdates()
         }
     }
-
+    
+    func cellDidBeginEditing(editingCell: TableViewCell) {
+        let editingOffset = tableView.contentOffset.y - editingCell.frame.origin.y as CGFloat
+        let visibleCells = tableView.visibleCells as! [TableViewCell]
+        for cell in visibleCells {
+            UIView.animateWithDuration(0.3, animations: { () -> Void in
+                cell.transform = CGAffineTransformMakeTranslation(0, editingOffset)
+                if cell !== editingCell { //Identity operator. Object references must not be the same.
+                    cell.alpha = 0.3
+                }
+            })
+        }
+    }
+    
+    func cellDidEndEditing(editingCell: TableViewCell) {
+        let visibleCells = tableView.visibleCells as! [TableViewCell]
+        for cell in visibleCells {
+            UIView.animateWithDuration(0.3, animations: { () -> Void in
+                cell.transform = CGAffineTransformIdentity
+                if cell !== editingCell { //Identity operator. Object references must not be the same.
+                    cell.alpha = 1
+                }
+            })
+        }
+    }
+    
 }

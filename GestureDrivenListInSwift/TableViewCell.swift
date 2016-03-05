@@ -12,9 +12,11 @@ import QuartzCore
 //Protocol to inform TableViewController that cell has changed.
 protocol TableViewCellDelegate {
     func toDoItemDeleted(toDoItem: ToDoItem)
+    func cellDidBeginEditing(editingCell: TableViewCell)
+    func cellDidEndEditing(editingCell: TableViewCell)
 }
 
-class TableViewCell: UITableViewCell {
+class TableViewCell: UITableViewCell, UITextFieldDelegate {
     //Properties
     let gradientLayer = CAGradientLayer()
     var originalCenter = CGPoint()
@@ -41,6 +43,8 @@ class TableViewCell: UITableViewCell {
         super.init(coder: aDecoder)
         
         //Add the label to the Cell.
+        label.delegate = self
+        label.contentVerticalAlignment = .Center
         addSubview(label)
         selectionStyle = .None
     }
@@ -132,6 +136,40 @@ class TableViewCell: UITableViewCell {
             }
         }
         return false
+    }
+    
+    //MARK: UITextFieldDelegate methods
+    func textFieldShouldReturn(textField: UITextField) -> Bool {
+        //Close the keyboard on Enter.
+        textField.resignFirstResponder()
+        return false
+    }
+    
+    func textFieldShouldBeginEditing(textField: UITextField) -> Bool {
+        //Disable editing of completed to-do items.
+        if toDoItem != nil {
+            //Return true if not completed; false if completed.
+            return !toDoItem!.completed
+        }
+        return false
+    }
+    
+    func textFieldDidEndEditing(textField: UITextField) {
+        //Update the toDoItem text after editing is complete.
+        if toDoItem != nil {
+            toDoItem!.text = textField.text!
+        }
+        //Invoke cellDidEndEditing when we end editing.
+        if delegate != nil {
+            delegate?.cellDidEndEditing(self)
+        }
+    }
+    
+    func textFieldDidBeginEditing(textField: UITextField) {
+        //Invoke cellDidBeginEditing when we begin editing.
+        if delegate != nil {
+            delegate?.cellDidBeginEditing(self)
+        }
     }
 
 }
