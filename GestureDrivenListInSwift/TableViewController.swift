@@ -81,9 +81,34 @@ extension TableViewController: TableViewCellDelegate {
         if index != nil {
             //Found the item in the array, so remove it.
             toDoItems.removeAtIndex(index!)
+            
+            //Loop over the visible cells to animate delete.
+            let visibleCells = self.tableView.visibleCells as! [TableViewCell]
+            let lastView = visibleCells.last
+            var delay = 0.0
+            var startAnimating = false
+            for i in 0..<visibleCells.count {
+                let cell = visibleCells[i]
+                if startAnimating {
+                    UIView.animateWithDuration(0.3, delay: delay, options: .CurveEaseInOut, animations: { () -> Void in
+                        cell.frame = CGRectOffset(cell.frame, 0, -cell.frame.size.height)
+                        }, completion: { (finished) -> Void in
+                            if (cell == lastView) {
+                                self.tableView.reloadData()
+                            }
+                    })
+                    delay += 0.03
+                }
+                if cell.toDoItem === toDoItem {
+                    startAnimating = true
+                    cell.hidden = true
+                }
+            }
+            
+            //Animate the remove of the row.
             self.tableView.beginUpdates()
             let indexPathForRow = NSIndexPath(forRow: index!, inSection: 0)
-            self.tableView.deleteRowsAtIndexPaths([indexPathForRow], withRowAnimation: UITableViewRowAnimation.Fade)
+            self.tableView.deleteRowsAtIndexPaths([indexPathForRow], withRowAnimation: .Fade)
             self.tableView.endUpdates()
         }
     }
