@@ -11,6 +11,8 @@ import UIKit
 class TableViewController: UITableViewController {
     //Properties
     var toDoItems = [ToDoItem]()
+    let placeHolderCell = TableViewCell(style: .Default, reuseIdentifier: "cell")
+    var pullDownInProgress = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -33,15 +35,29 @@ class TableViewController: UITableViewController {
         self.tableView.rowHeight = 50.0
         
     }
+    
+    func toDoItemAdded() {
+        let toDoItem = ToDoItem(text: "")
+        toDoItems.insert(toDoItem, atIndex: 0)
+        tableView.reloadData()
+        // enter edit mode
+        var editCell: TableViewCell
+        let visibleCells = tableView.visibleCells as! [TableViewCell]
+        for cell in visibleCells {
+            if (cell.toDoItem === toDoItem) { //Identity operator. Object references must be the same.
+                editCell = cell
+                editCell.label.becomeFirstResponder()
+                break
+            }
+        }
+    }
 
-    // MARK: - Table view data source
+    // MARK: TABLE VIEW DATA SOURCE
     override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
-        // #warning Incomplete implementation, return the number of sections
         return 1
     }
 
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        // #warning Incomplete implementation, return the number of rows
         return toDoItems.count
     }
 
@@ -50,8 +66,6 @@ class TableViewController: UITableViewController {
 
         //Configure the cell.
         let item = toDoItems[indexPath.row]
-        //cell.textLabel?.text = item.text
-        //cell.textLabel?.backgroundColor = UIColor.clearColor() //Setting background to clear so we can see gradient.
         cell.selectionStyle = .None
         cell.delegate = self
         cell.toDoItem = item
@@ -59,7 +73,7 @@ class TableViewController: UITableViewController {
         return cell
     }
     
-    //MARK: Table View Delegate
+    //MARK: TABLE VIEW DELEGATE
     func colorForIndex(index: Int) -> UIColor {
         //Helper method for returning a red color that is progressively greener based on its index.
         let itemCount = toDoItems.count - 1
@@ -70,10 +84,43 @@ class TableViewController: UITableViewController {
     override func tableView(tableView: UITableView, willDisplayCell cell: UITableViewCell, forRowAtIndexPath indexPath: NSIndexPath) {
         cell.backgroundColor = colorForIndex(indexPath.row)
     }
+    
+    //MARK: SCROLL VIEW DELEGATE
+    override func scrollViewWillBeginDragging(scrollView: UIScrollView) {
+        //This behavior starts when a user pulls down while at the top of the table.
+        pullDownInProgress = scrollView.contentOffset.y <= 0.0 //At the top of the table.
+        placeHolderCell.backgroundColor = UIColor.redColor()
+        if pullDownInProgress {
+            //Add the placeholder
+            self.tableView.insertSubview(placeHolderCell, atIndex: 0)
+        }
+    }
+    
+    override func scrollViewDidScroll(scrollView: UIScrollView) {
+        let scrollViewContentOffsetY = scrollView.contentOffset.y
+        
+        if pullDownInProgress && scrollView.contentOffset.y <= 0.0 {
+            //Maintain the location of the placeholder.
+            placeHolderCell.frame = CGRect(x: 0, y: -tableView.rowHeight, width: tableView.frame.size.width, height: tableView.rowHeight)
+            placeHolderCell.label.text = -scrollViewContentOffsetY > tableView.rowHeight ? "Release to add item" : "Pull to add item"
+            placeHolderCell.alpha = min(1.0, -scrollViewContentOffsetY / tableView.rowHeight)
+        } else {
+            pullDownInProgress = false
+        }
+    }
+    
+    override func scrollViewDidEndDragging(scrollView: UIScrollView, willDecelerate decelerate: Bool) {
+        //Check whether the user pulled down far enough.
+        if pullDownInProgress && -scrollView.contentOffset.y > tableView.rowHeight {
+            toDoItemAdded()
+        }
+        pullDownInProgress = false
+        placeHolderCell.removeFromSuperview()
+    }
 
 }
 
-//MARK: Table View Cell Delegate
+//MARK: TABLE VIEW CELL DELEGATE
 extension TableViewController: TableViewCellDelegate {
 
     func toDoItemDeleted(toDoItem: ToDoItem) {
@@ -135,6 +182,9 @@ extension TableViewController: TableViewCellDelegate {
                     cell.alpha = 1
                 }
             })
+        }
+        if editingCell.toDoItem!.text == "" {
+            toDoItemDeleted(editingCell.toDoItem!)
         }
     }
     

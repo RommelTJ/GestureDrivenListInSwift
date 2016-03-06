@@ -49,6 +49,21 @@ class TableViewCell: UITableViewCell, UITextFieldDelegate {
         selectionStyle = .None
     }
     
+    override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
+        //Initialize the label.
+        label = StrikeThroughText(frame: CGRect.null)
+        label.textColor = UIColor.whiteColor()
+        label.font = UIFont.boldSystemFontOfSize(16)
+        label.backgroundColor = UIColor.clearColor()
+        super.init(style: style, reuseIdentifier: reuseIdentifier)
+        
+        //Add the label to the Cell.
+        label.delegate = self
+        label.contentVerticalAlignment = .Center
+        addSubview(label)
+        selectionStyle = .None
+    }
+    
     override func awakeFromNib() {
         super.awakeFromNib()
         
